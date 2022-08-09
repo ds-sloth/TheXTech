@@ -19,7 +19,8 @@
  */
 
 #include <cmath>
-#include <SDL2/SDL_stdinc.h>
+
+#include "core/std.h"
 
 #include "globals.h"
 #include "range_arr.hpp"
@@ -172,8 +173,8 @@ void ScreenFader::draw(bool fullscreen)
                     bottomH = (RenderH - focusY),
                     leftW = focusX * m_scale, // left side
                     topY = focusY * m_scale, // top side
-                    rightX = RenderW - SDL_ceil(rightW * m_scale) + 1, // right side
-                    bottomY = RenderH - SDL_ceil(bottomH * m_scale) + 1; // bottom side
+                    rightX = RenderW - XStd::ceil(rightW * m_scale) + 1, // right side
+                    bottomY = RenderH - XStd::ceil(bottomH * m_scale) + 1; // bottom side
 
             // Left side
             XRender::renderRect(0, 0, leftW, RenderH, color_r, color_b, color_g, 1.f, true);
@@ -218,22 +219,22 @@ void ScreenFader::draw(bool fullscreen)
             int maxRadius = 0, maxRadiusPre;
 
             // top-left corner
-            maxRadiusPre = std::sqrt(SDL_pow(focusX, 2) + SDL_pow(focusY, 2));
+            maxRadiusPre = std::sqrt(XStd::pow(focusX, 2) + XStd::pow(focusY, 2));
             if(maxRadius < maxRadiusPre)
                 maxRadius = maxRadiusPre;
 
             // top-right corner
-            maxRadiusPre = std::sqrt(SDL_pow(RenderW - focusX,  2) + SDL_pow(focusY, 2));
+            maxRadiusPre = std::sqrt(XStd::pow(RenderW - focusX,  2) + XStd::pow(focusY, 2));
             if(maxRadius < maxRadiusPre)
                 maxRadius = maxRadiusPre;
 
             // bottom-left corner
-            maxRadiusPre = std::sqrt(SDL_pow(focusX, 2) + SDL_pow(RenderH - focusY, 2));
+            maxRadiusPre = std::sqrt(XStd::pow(focusX, 2) + XStd::pow(RenderH - focusY, 2));
             if(maxRadius < maxRadiusPre)
                 maxRadius = maxRadiusPre;
 
             // bottom-right corner
-            maxRadiusPre = std::sqrt(SDL_pow(RenderW - focusX, 2) + SDL_pow(RenderH - focusY, 2));
+            maxRadiusPre = std::sqrt(XStd::pow(RenderW - focusX, 2) + XStd::pow(RenderH - focusY, 2));
             if(maxRadius < maxRadiusPre)
                 maxRadius = maxRadiusPre;
 
@@ -257,7 +258,7 @@ void ScreenFader::draw(bool fullscreen)
         else
         {
             float center = (ScreenH / 2);
-            float sideHeight = SDL_ceil(center * m_scale);
+            float sideHeight = XStd::ceil(center * m_scale);
             XRender::renderRect(0, 0, ScreenW, sideHeight, color_r, color_b, color_g, 1.f, true);
             XRender::renderRect(0, ScreenH - sideHeight, ScreenW, sideHeight, color_r, color_b, color_g, 1.f, true);
         }
@@ -269,7 +270,7 @@ void ScreenFader::draw(bool fullscreen)
         else
         {
             float center = (ScreenW / 2);
-            float sideWidth = SDL_ceil(center * m_scale);
+            float sideWidth = XStd::ceil(center * m_scale);
             XRender::renderRect(0, 0, sideWidth, ScreenH, color_r, color_b, color_g, 1.f, true);
             XRender::renderRect(ScreenW - sideWidth, 0, sideWidth, ScreenH, color_r, color_b, color_g, 1.f, true);
         }

@@ -111,6 +111,10 @@ option(USE_SYSTEM_SDL2 "Use SDL2 from a system even prefering system libraries" 
 
 option(USE_STATIC_LIBC "Link libc and libstdc++ statically" OFF)
 
+if(3DS)
+    set(USE_STATIC_LIBC ON)
+endif()
+
 option(RANGE_ARR_USE_HEAP "Store data of RangeArr<> template in a heap" OFF)
 option(RANGE_ARR_UNSAFE_MODE "Disable all range checks at RangeArr<> template" OFF)
 
@@ -186,7 +190,7 @@ endif()
 include(lib/Allocator/pool-allocator.cmake)
 include(lib/DirManager/dirman.cmake)
 
-if(NOT VITA)
+if(NOT VITA AND NOT 3DS)
     include(lib/FileMapper/FileMapper.cmake)
 endif()
 
@@ -199,6 +203,16 @@ include(lib/tclap/tclap.cmake)
 include(lib/md5/md5.cmake)
 if(WIN32)
     include(lib/CrashHandler/StackWalker/StackWalker.cmake)
+endif()
+
+if(3DS)
+    set(GME_YM2612_EMU "GENS" CACHE STRING "" FORCE)
+    set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
+    set(ENABLE_UBSAN OFF CACHE BOOL "" FORCE)
+    set(BUILD_GME_STATIC ON CACHE BOOL "" FORCE)
+    set(GME_ENABLE_ZLIB OFF CACHE BOOL "" FORCE)
+    set(THEXTECH_ENABLE_AUDIO_FX OFF CACHE BOOL "" FORCE)
+    add_subdirectory(3rdparty/AudioCodecs/libgme)
 endif()
 
 if(THEXTECH_ENABLE_LUA)
@@ -258,7 +272,7 @@ if(USE_SYSTEM_LIBS)
     list(APPEND A2XT_LIBS ${FREEIMAGELITE_LIB} ${MIXERX_LIB} "${SDL2_LIBRARIES}")
     list(APPEND A2XT_INCS ${SDL2_INCLUDE_DIRS} ${MIXERX_HEAD_DIR} ${FREEIMAGELITE_HEAD_DIR})
     target_link_libraries(A2XT_Int INTERFACE ${A2XT_LIBS})
-else()
+elseif(NOT 3DS)
     include(cmake/library_FreeImage.cmake)
     include(cmake/library_SDLMixerX.cmake)
     list(APPEND A2XT_LIBS PGE_FreeImage)
@@ -282,15 +296,20 @@ set(LIB_SRC
     ${FMT_SRCS}
     ${MD5_SRCS}
     ${POOLALLOC_SRCS}
-    lib/Graphics/graphics_funcs.cpp
-    lib/Graphics/image_size.cpp
-    lib/Graphics/size.cpp
-    lib/Graphics/sizef.cpp
     ${INIPROCESSOR_SRCS}
     ${LOGGER_SRCS}
     ${UTILS_SRCS}
     ${LIB_SRC_EXTRA}
 )
+
+if(NOT 3DS)
+    list(APPEND LIB_SRC
+        lib/Graphics/graphics_funcs.cpp
+        lib/Graphics/image_size.cpp
+        lib/Graphics/size.cpp
+        lib/Graphics/sizef.cpp
+    )
+endif()
 
 if(NOT ANDROID AND NOT EMSCRIPTEN AND NOT VITA AND NOT 3DS)
     list(APPEND LIB_SRC
@@ -326,10 +345,6 @@ set(THEXTECH_SRC
     src/frame_timer.cpp
     src/global_dirs.cpp
     src/global_strings.cpp
-    src/core/base/render_base.cpp
-    src/core/base/window_base.cpp
-    src/core/base/msgbox_base.cpp
-    src/core/base/events_base.cpp
     src/main/world_loop.cpp
     src/main/world_file.cpp
     src/main/game_info.cpp
@@ -368,9 +383,6 @@ set(THEXTECH_SRC
     src/graphics/gfx_draw_player.cpp
     src/graphics/gfx_special_frames.cpp
     src/graphics/gfx_screen.cpp
-    src/control/joystick.cpp
-    src/control/keyboard.cpp
-    src/control/touchscreen.cpp
     src/control/duplicate.cpp
     src/control/controls.cpp
     src/logic/world_map_fog.cpp
@@ -452,13 +464,22 @@ if(THEXTECH_ENABLE_AUDIO_FX)
     )
 endif()
 
-add_definitions(-DCORE_EVERYTHING_SDL)
-list(APPEND THEXTECH_SRC
-    src/core/sdl/render_sdl.cpp
-    src/core/sdl/window_sdl.cpp
-    src/core/sdl/msgbox_sdl.cpp
-    src/core/sdl/events_sdl.cpp
-)
+if(NOT 3DS)
+    add_definitions(-DCORE_EVERYTHING_SDL)
+    list(APPEND THEXTECH_SRC
+        src/control/joystick.cpp
+        src/control/keyboard.cpp
+        src/control/touchscreen.cpp
+        src/core/base/render_base.cpp
+        src/core/base/window_base.cpp
+        src/core/base/msgbox_base.cpp
+        src/core/base/events_base.cpp
+        src/core/sdl/render_sdl.cpp
+        src/core/sdl/window_sdl.cpp
+        src/core/sdl/msgbox_sdl.cpp
+        src/core/sdl/events_sdl.cpp
+    )
+endif()
 
 # Add heads into the list
 file(GLOB THEXTECH_HEADS_SRC
@@ -534,6 +555,14 @@ if(ANDROID)
 #        DEPENDS SDL_ApkPackLibs_makeDir "${DEPENDENCIES_INSTALL_DIR}/lib/libhidapi.so" AudioCodecs_Local
 #    )
 #    add_dependencies(thextech SDL_ApkPackLibs_hidapi)
+elseif(3DS)
+    add_executable(thextech ${THEXTECH_SRC} ${LIB_SRC})
+    target_include_directories(thextech PRIVATE "3rdparty/AudioCodecs/libgme/include/" SYSTEM)
+    target_link_libraries(thextech PRIVATE gme_static)
+    target_link_libraries(thextech PRIVATE pgefl)
+    target_link_libraries(thextech PRIVATE citro2d citro3d ctru)
+    target_link_libraries(thextech PRIVATE vorbisidec ogg)
+    set_target_properties(thextech PROPERTIES SUFFIX ".elf")
 else()
     add_executable(thextech ${THEXTECH_SRC} ${LIB_SRC})
     pge_set_nopie(thextech)
@@ -607,6 +636,10 @@ if(VITA)
         -DVITA -DNO_SCREENSHOT -DTHEXTECH_FIXED_RES -DFIXED_RES -DLOW_MEM -DPRELOAD_LEVELS -DNO_INTPTROC)
 endif()
 
+if(3DS)
+    target_compile_definitions(thextech PRIVATE -DPGE_NO_THREADING -DNO_SCREENSHOT -DLOW_MEM -DFIXED_RES -DPRELOAD_LEVELS -DRANGE_ARR_UNSAFE_MODE -D__3DS__ -DNO_FILE_LOGGING)
+endif()
+
 if(THEXTECH_FIXED_ASSETS_PATH AND NOT THEXTECH_FIXED_ASSETS_PATH STREQUAL "")
     target_compile_definitions(thextech PRIVATE -DFIXED_ASSETS_PATH="${THEXTECH_FIXED_ASSETS_PATH}")
 endif()
@@ -668,7 +701,7 @@ if(THEXTECH_INTERPROC_SUPPORTED)
     target_compile_definitions(thextech PRIVATE -DTHEXTECH_INTERPROC_SUPPORTED)
 endif()
 
-if(NOT USE_SYSTEM_LIBS)
+if(NOT USE_SYSTEM_LIBS AND A2XT_DEPS)
     add_dependencies(thextech ${A2XT_DEPS})
 endif()
 
@@ -761,6 +794,8 @@ elseif(WIN32)
     install(FILES LICENSE DESTINATION . RENAME License.TheXTech.txt)
 elseif(VITA)
     include(cmake/package_vita.cmake)
+elseif(3DS)
+    install(TARGETS thextech DESTINATION .)
 else()
     install(TARGETS thextech
         RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}

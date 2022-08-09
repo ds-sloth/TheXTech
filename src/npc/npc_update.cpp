@@ -442,7 +442,7 @@ void UpdateNPCs()
                         else if(CheckCollision(tempLocation, NPC[B].Location))
                         {
                             numAct++;
-                            SDL_assert_release(numAct <= maxNPCs);
+                            XStd::assert_release(numAct <= maxNPCs);
                             newAct[numAct] = B;
                             NPC[B].Active = true;
                             NPC[B].TimeLeft = NPC[A].TimeLeft;
@@ -491,7 +491,7 @@ void UpdateNPCs()
                                 else if(CheckCollision(tempLocation, NPC[B].Location))
                                 {
                                     numAct += 1;
-                                    SDL_assert_release(numAct <= maxNPCs);
+                                    XStd::assert_release(numAct <= maxNPCs);
                                     newAct[numAct] = B;
                                     NPC[B].Active = true;
                                     NPC[B].TimeLeft = NPC[newAct[C]].TimeLeft;
@@ -2044,8 +2044,8 @@ void UpdateNPCs()
                             {
                                 if(bCheck == 1)
                                 {
-                                    // fBlock = FirstBlock[(int)SDL_floor(NPC[A].Location.X / 32) - 1];
-                                    // lBlock = LastBlock[(int)SDL_floor((NPC[A].Location.X + NPC[A].Location.Width) / 32.0) + 1];
+                                    // fBlock = FirstBlock[(int)XStd::floor(NPC[A].Location.X / 32) - 1];
+                                    // lBlock = LastBlock[(int)XStd::floor((NPC[A].Location.X + NPC[A].Location.Width) / 32.0) + 1];
                                     blockTileGet(NPC[A].Location, fBlock, lBlock);
                                 }
                                 else

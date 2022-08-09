@@ -295,7 +295,7 @@ void Insert(const char* c)
         return;
 
     Text.insert(s_cursor, c);
-    s_cursor += SDL_strlen(c);
+    s_cursor += XStd::strlen(c);
 }
 
 inline void InsertUnicodeChar(const char* c)

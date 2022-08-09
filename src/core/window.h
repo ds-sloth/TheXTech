@@ -22,11 +22,10 @@
 #ifndef WINDOW_HHHH
 #define WINDOW_HHHH
 
-#include <SDL2/SDL_stdinc.h>
-#include "base/window_base.h"
-
 #ifndef WINDOW_CUSTOM
-#   define E_INLINE SDL_FORCE_INLINE
+#   include "core/std.h"
+#   include "base/window_base.h"
+#   define E_INLINE TXT_FORCE_INLINE
 #   define TAIL
 #else
 #   define E_INLINE    extern

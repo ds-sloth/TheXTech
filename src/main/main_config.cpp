@@ -18,8 +18,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <SDL2/SDL_audio.h>
-
 #include "../globals.h"
 #include "../game_main.h"
 #include "../graphics.h"
@@ -56,6 +54,7 @@ void OpenConfig_preSetup()
         {"2", RENDER_ACCELERATED_VSYNC}
     };
 
+#ifndef __3DS__
     const IniProcessing::StrEnumMap sampleFormats =
     {
         {"s8", AUDIO_S8},
@@ -87,6 +86,7 @@ void OpenConfig_preSetup()
         {"float32be", AUDIO_F32MSB},
         {"pcm_f32be", AUDIO_F32MSB}
     };
+#endif
 
     const IniProcessing::StrEnumMap compatMode =
     {
@@ -159,7 +159,9 @@ void OpenConfig_preSetup()
         config.read("disable-sound", g_audioSetup.disableSound, false);
         config.read("sample-rate", g_audioSetup.sampleRate, 44100);
         config.read("channels", g_audioSetup.channels, 2);
+#ifndef __3DS__
         config.readEnum("format", g_audioSetup.format, (uint16_t)AUDIO_F32, sampleFormats);
+#endif
         config.read("buffer-size", g_audioSetup.bufferSize, 512);
         config.endGroup();
 
@@ -386,6 +388,7 @@ void SaveConfig()
     config.setValue("sample-rate", g_audioSetup.sampleRate);
     config.setValue("channels", g_audioSetup.channels);
     config.setValue("buffer-size", g_audioSetup.bufferSize);
+#ifndef __3DS__
     static const std::unordered_map<int, std::string> formats_back = {
         {AUDIO_S8 , "s8"},
         {AUDIO_U8 , "u8"},
@@ -399,6 +402,7 @@ void SaveConfig()
         {AUDIO_F32MSB, "float32be"}
     };
     config.setValue("format", formats_back.at(g_audioSetup.format));
+#endif
     config.endGroup();
 
     config.beginGroup("gameplay");

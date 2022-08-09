@@ -22,6 +22,8 @@
 #ifndef TREES_HHHH
 #define TREES_HHHH
 
+#include "core/std.h"
+
 #include "globals.h"
 
 #define MAX_TREEQUERY_DEPTH 4
@@ -77,8 +79,8 @@ public:
 
     TreeResult_Sentinel()
     {
-        SDL_assert(cur_treeresult_vec >= 0); // invalid state
-        SDL_assert_release(cur_treeresult_vec < MAX_TREEQUERY_DEPTH); // insufficient sentinels: move recursive calls out of sentinel scope
+        XStd::assert_debug(cur_treeresult_vec >= 0); // invalid state
+        XStd::assert_release(cur_treeresult_vec < MAX_TREEQUERY_DEPTH); // insufficient sentinels: move recursive calls out of sentinel scope
         i_vec = &treeresult_vec[cur_treeresult_vec];
         i_vec->clear();
         cur_treeresult_vec ++;
@@ -86,7 +88,7 @@ public:
 
     TreeResult_Sentinel(const TreeResult_Sentinel& other)
     {
-        SDL_assert(false); // can't have two sentinels for same results
+        XStd::assert_debug(false); // can't have two sentinels for same results
     }
 
     TreeResult_Sentinel(TreeResult_Sentinel&& other)
@@ -97,7 +99,7 @@ public:
 
     it begin() const
     {
-        SDL_assert(i_vec); // invalid use of discarded sentinel
+        XStd::assert_debug(i_vec); // invalid use of discarded sentinel
         it ret;
         ret.it_internal = i_vec->begin();
         return ret;
@@ -105,7 +107,7 @@ public:
 
     it end() const
     {
-        SDL_assert(i_vec); // invalid use of discarded sentinel
+        XStd::assert_debug(i_vec); // invalid use of discarded sentinel
         it ret;
         ret.it_internal = i_vec->end();
         return ret;
@@ -116,7 +118,7 @@ public:
         if(!i_vec)
             return;
         cur_treeresult_vec --;
-        SDL_assert(cur_treeresult_vec == i_vec - &treeresult_vec[0]); // scopes have been switched
+        XStd::assert_debug(cur_treeresult_vec == i_vec - &treeresult_vec[0]); // scopes have been switched
     }
 };
 

@@ -20,6 +20,8 @@
 
 #include <Logger/logger.h>
 
+#include "core/std.h"
+
 #include "mememu.h"
 #include "globals.h"
 #include "global_constants.h"
@@ -43,7 +45,7 @@
 
 
 #if 0 // Unused yet
-SDL_FORCE_INLINE void toX86Endian(double in_d, uint8_t out[8])
+TXT_FORCE_INLINE void toX86Endian(double in_d, uint8_t out[8])
 {
     auto *in = reinterpret_cast<uint8_t*>(&in_d);
 
@@ -77,7 +79,7 @@ SDL_FORCE_INLINE void toX86Endian(double in_d, uint8_t out[8])
 #endif
 }
 
-SDL_FORCE_INLINE void fromX86Endian(const uint8_t in[8], double &out_d)
+TXT_FORCE_INLINE void fromX86Endian(const uint8_t in[8], double &out_d)
 {
     auto *out = reinterpret_cast<uint8_t*>(&out_d);
 
@@ -113,10 +115,10 @@ SDL_FORCE_INLINE void fromX86Endian(const uint8_t in[8], double &out_d)
 #endif
 
 
-SDL_FORCE_INLINE void modifyByteX86(double &dst, size_t byte, uint8_t data)
+TXT_FORCE_INLINE void modifyByteX86(double &dst, size_t byte, uint8_t data)
 {
     auto *in = reinterpret_cast<uint8_t*>(&dst);
-    SDL_assert(byte < 8);
+    XStd::assert_debug(byte < 8);
 
 #if defined(THEXTECH_BIG_ENDIAN)
     in[7 - byte] = data;
@@ -128,10 +130,10 @@ SDL_FORCE_INLINE void modifyByteX86(double &dst, size_t byte, uint8_t data)
 #endif
 }
 
-SDL_FORCE_INLINE void modifyByteX86(float &dst, size_t byte, uint8_t data)
+TXT_FORCE_INLINE void modifyByteX86(float &dst, size_t byte, uint8_t data)
 {
     auto *in = reinterpret_cast<uint8_t*>(&dst);
-    SDL_assert(byte < 4);
+    XStd::assert_debug(byte < 4);
 
 #if defined(THEXTECH_BIG_ENDIAN)
     in[3 - byte] = data;
@@ -140,10 +142,10 @@ SDL_FORCE_INLINE void modifyByteX86(float &dst, size_t byte, uint8_t data)
 #endif
 }
 
-SDL_FORCE_INLINE void modifyByteX86(int16_t &dst, size_t byte, uint8_t data)
+TXT_FORCE_INLINE void modifyByteX86(int16_t &dst, size_t byte, uint8_t data)
 {
     auto *in = reinterpret_cast<uint8_t*>(&dst);
-    SDL_assert(byte < 2);
+    XStd::assert_debug(byte < 2);
 
 #if defined(THEXTECH_BIG_ENDIAN)
     in[1 - byte] = data;
@@ -153,10 +155,10 @@ SDL_FORCE_INLINE void modifyByteX86(int16_t &dst, size_t byte, uint8_t data)
 }
 
 
-SDL_FORCE_INLINE uint8_t getByteX86(const double &src, size_t byte)
+TXT_FORCE_INLINE uint8_t getByteX86(const double &src, size_t byte)
 {
     const auto *in = reinterpret_cast<const uint8_t*>(&src);
-    SDL_assert(byte < 8);
+    XStd::assert_debug(byte < 8);
 #if defined(THEXTECH_BIG_ENDIAN)
     return in[7 - byte];
 #elif defined(ARM_BIDI_ENDIAN) // some old devices
@@ -167,10 +169,10 @@ SDL_FORCE_INLINE uint8_t getByteX86(const double &src, size_t byte)
 #endif
 }
 
-SDL_FORCE_INLINE uint8_t getByteX86(const float &src, size_t byte)
+TXT_FORCE_INLINE uint8_t getByteX86(const float &src, size_t byte)
 {
     const auto *in = reinterpret_cast<const uint8_t*>(&src);
-    SDL_assert(byte < 4);
+    XStd::assert_debug(byte < 4);
 #if defined(THEXTECH_BIG_ENDIAN)
     return in[3 - byte];
 #else // normal little endian
@@ -178,10 +180,10 @@ SDL_FORCE_INLINE uint8_t getByteX86(const float &src, size_t byte)
 #endif
 }
 
-SDL_FORCE_INLINE uint8_t getByteX86(const int16_t &src, size_t byte)
+TXT_FORCE_INLINE uint8_t getByteX86(const int16_t &src, size_t byte)
 {
     const auto *in = reinterpret_cast<const uint8_t*>(&src);
-    SDL_assert(byte < 2);
+    XStd::assert_debug(byte < 2);
 #if defined(THEXTECH_BIG_ENDIAN)
     return in[1 - byte];
 #else // normal little endian
@@ -194,7 +196,7 @@ SDL_FORCE_INLINE uint8_t getByteX86(const int16_t &src, size_t byte)
  *          Write memory value                  *
  *----------------------------------------------*/
 
-SDL_FORCE_INLINE void memToValue(double &target, double value, FIELDTYPE ftype)
+TXT_FORCE_INLINE void memToValue(double &target, double value, FIELDTYPE ftype)
 {
     switch(ftype)
     {
@@ -218,7 +220,7 @@ SDL_FORCE_INLINE void memToValue(double &target, double value, FIELDTYPE ftype)
     }
 }
 
-SDL_FORCE_INLINE void memToValue(float &target, double value, FIELDTYPE ftype)
+TXT_FORCE_INLINE void memToValue(float &target, double value, FIELDTYPE ftype)
 {
     switch(ftype)
     {
@@ -242,7 +244,7 @@ SDL_FORCE_INLINE void memToValue(float &target, double value, FIELDTYPE ftype)
     }
 }
 
-SDL_FORCE_INLINE void memToValue(int &target, double value, FIELDTYPE ftype)
+TXT_FORCE_INLINE void memToValue(int &target, double value, FIELDTYPE ftype)
 {
     switch(ftype)
     {
@@ -266,7 +268,7 @@ SDL_FORCE_INLINE void memToValue(int &target, double value, FIELDTYPE ftype)
     }
 }
 
-SDL_FORCE_INLINE void memToValue(bool &target, double value, FIELDTYPE ftype)
+TXT_FORCE_INLINE void memToValue(bool &target, double value, FIELDTYPE ftype)
 {
     UNUSED(ftype);
     target = (value != 0.0);
@@ -277,7 +279,7 @@ SDL_FORCE_INLINE void memToValue(bool &target, double value, FIELDTYPE ftype)
  *           Read memory value                  *
  *----------------------------------------------*/
 
-SDL_FORCE_INLINE double valueToMem(double &source, FIELDTYPE ftype)
+TXT_FORCE_INLINE double valueToMem(double &source, FIELDTYPE ftype)
 {
     switch(ftype)
     {
@@ -295,7 +297,7 @@ SDL_FORCE_INLINE double valueToMem(double &source, FIELDTYPE ftype)
     }
 }
 
-SDL_FORCE_INLINE double valueToMem(float &source, FIELDTYPE ftype)
+TXT_FORCE_INLINE double valueToMem(float &source, FIELDTYPE ftype)
 {
     switch(ftype)
     {
@@ -312,7 +314,7 @@ SDL_FORCE_INLINE double valueToMem(float &source, FIELDTYPE ftype)
     }
 }
 
-SDL_FORCE_INLINE double valueToMem(int &source, FIELDTYPE ftype)
+TXT_FORCE_INLINE double valueToMem(int &source, FIELDTYPE ftype)
 {
     switch(ftype)
     {
@@ -330,7 +332,7 @@ SDL_FORCE_INLINE double valueToMem(int &source, FIELDTYPE ftype)
     }
 }
 
-SDL_FORCE_INLINE double valueToMem(bool &source, FIELDTYPE ftype)
+TXT_FORCE_INLINE double valueToMem(bool &source, FIELDTYPE ftype)
 {
     UNUSED(ftype);
     return source ? 0xFFFF : 0;
@@ -860,7 +862,7 @@ public:
         {
         case VT_DOUBLE:
         {
-            SDL_assert(t->field_d);
+            XStd::assert_debug(t->field_d);
             if(ftype != FT_DFLOAT)
                 pLogWarning("MemEmu: Read type missmatched at %s 0x%x (Double expected, %s actually)", objName, address, FieldtypeToStr(ftype));
             return valueToMem(obj->*(t->field_d), ftype);
@@ -868,7 +870,7 @@ public:
 
         case VT_FLOAT:
         {
-            SDL_assert(t->field_f);
+            XStd::assert_debug(t->field_f);
             if(ftype != FT_FLOAT)
                 pLogWarning("MemEmu: Read type missmatched at %s 0x%x (Float expected, %s actually)", objName, address, FieldtypeToStr(ftype));
             return valueToMem(obj->*(t->field_f), ftype);
@@ -876,7 +878,7 @@ public:
 
         case VT_INT:
         {
-            SDL_assert(t->field_i);
+            XStd::assert_debug(t->field_i);
             if(ftype != FT_DWORD && ftype != FT_WORD)
                 pLogWarning("MemEmu: Read type missmatched at %s 0x%x (SInt16 or SInt32 expected, %s actually)", objName, address, FieldtypeToStr(ftype));
             return valueToMem(obj->*(t->field_i), ftype);
@@ -884,7 +886,7 @@ public:
 
         case VT_BOOL:
         {
-            SDL_assert(t->field_b);
+            XStd::assert_debug(t->field_b);
             if(ftype != FT_WORD && ftype != FT_BYTE)
                 pLogWarning("MemEmu: Read type missmatched at %s 0x%x (Sint16 or Uint8 as boolean expected, %s actually)", objName, address, FieldtypeToStr(ftype));
             return valueToMem(obj->*(t->field_b), ftype);
@@ -897,7 +899,7 @@ public:
             case VT_DOUBLE:
             {
                 auto &bt = m_type[t->baseAddress];
-                SDL_assert(bt.type == VT_DOUBLE && bt.field_d);
+                XStd::assert_debug(bt.type == VT_DOUBLE && bt.field_d);
                 if(ftype != FT_BYTE)
                     pLogWarning("MemEmu: Read type missmatched at %s 0x%x (byte expected, %s actually)", objName, address, FieldtypeToStr(ftype));
                 return (double)getByteX86(obj->*(bt.field_d), t->offset);
@@ -906,7 +908,7 @@ public:
             case VT_FLOAT:
             {
                 auto &bt = m_type[t->baseAddress];
-                SDL_assert(bt.type == VT_FLOAT && bt.field_f);
+                XStd::assert_debug(bt.type == VT_FLOAT && bt.field_f);
                 if(ftype != FT_BYTE)
                     pLogWarning("MemEmu: Read type missmatched at %s 0x%x (byte expected, %s actually)", objName, address, FieldtypeToStr(ftype));
                 return (double)getByteX86(obj->*(bt.field_f), t->offset);
@@ -915,7 +917,7 @@ public:
             case VT_INT:
             {
                 auto &bt = m_type[t->baseAddress];
-                SDL_assert(bt.type == VT_INT && bt.field_i);
+                XStd::assert_debug(bt.type == VT_INT && bt.field_i);
                 if(ftype != FT_BYTE)
                     pLogWarning("MemEmu: Read type missmatched at %s 0x%x (byte expected, %s actually)", objName, address, FieldtypeToStr(ftype));
                 int16_t s = static_cast<int16_t>(obj->*(bt.field_i));
@@ -971,7 +973,7 @@ public:
         {
         case VT_DOUBLE:
         {
-            SDL_assert(t->field_d);
+            XStd::assert_debug(t->field_d);
             if(ftype != FT_DFLOAT)
                 pLogWarning("MemEmu: Write type missmatched at %s 0x%x (Double expected, %s actually)", objName, address, FieldtypeToStr(ftype));
             memToValue(obj->*(t->field_d), value, ftype);
@@ -980,7 +982,7 @@ public:
 
         case VT_FLOAT:
         {
-            SDL_assert(t->field_f);
+            XStd::assert_debug(t->field_f);
             if(ftype != FT_FLOAT)
                 pLogWarning("MemEmu: Write type missmatched at %s 0x%x (Float expected, %s actually)", objName, address, FieldtypeToStr(ftype));
             memToValue(obj->*(t->field_f), value, ftype);
@@ -989,7 +991,7 @@ public:
 
         case VT_INT:
         {
-            SDL_assert(t->field_i);
+            XStd::assert_debug(t->field_i);
             if(ftype != FT_DWORD && ftype != FT_WORD)
                 pLogWarning("MemEmu: Write type missmatched at %s 0x%x (SInt16 or SInt32 expected, %s actually)", objName, address, FieldtypeToStr(ftype));
             memToValue(obj->*(t->field_i), value, ftype);
@@ -998,7 +1000,7 @@ public:
 
         case VT_BOOL:
         {
-            SDL_assert(t->field_b);
+            XStd::assert_debug(t->field_b);
             if(ftype != FT_WORD && ftype != FT_BYTE)
                 pLogWarning("MemEmu: Write type missmatched at %s 0x%x (Sint16 or Uint8 as boolean expected, %s actually)", objName, address, FieldtypeToStr(ftype));
             memToValue(obj->*(t->field_b), value, ftype);
@@ -1012,7 +1014,7 @@ public:
             case VT_DOUBLE:
             {
                 auto &bt = m_type[t->baseAddress];
-                SDL_assert(bt.type == VT_DOUBLE && bt.field_d);
+                XStd::assert_debug(bt.type == VT_DOUBLE && bt.field_d);
                 if(ftype != FT_BYTE)
                     pLogWarning("MemEmu: Write type missmatched at %s 0x%x (byte expected, %s actually)", objName, address, FieldtypeToStr(ftype));
                 modifyByteX86(obj->*(bt.field_d), t->offset, (uint8_t)value);
@@ -1022,7 +1024,7 @@ public:
             case VT_FLOAT:
             {
                 auto &bt = m_type[t->baseAddress];
-                SDL_assert(bt.type == VT_FLOAT && bt.field_f);
+                XStd::assert_debug(bt.type == VT_FLOAT && bt.field_f);
                 if(ftype != FT_BYTE)
                     pLogWarning("MemEmu: Write type missmatched at %s 0x%x (byte expected, %s actually)", objName, address, FieldtypeToStr(ftype));
                 modifyByteX86(obj->*(bt.field_f), t->offset, (uint8_t)value);
@@ -1032,7 +1034,7 @@ public:
             case VT_INT:
             {
                 auto &bt = m_type[t->baseAddress];
-                SDL_assert(bt.type == VT_INT && bt.field_i);
+                XStd::assert_debug(bt.type == VT_INT && bt.field_i);
                 if(ftype != FT_BYTE)
                     pLogWarning("MemEmu: Write type missmatched at %s 0x%x (byte expected, %s actually)", objName, address, FieldtypeToStr(ftype));
                 int16_t s = static_cast<int16_t>(obj->*(bt.field_i));
@@ -1428,7 +1430,7 @@ static PlayerMemory         s_emuPlayer;
 static NPCMemory            s_emuNPC;
 
 template<typename T, class D>
-SDL_FORCE_INLINE void opAdd(D &mem, size_t addr, double o2, FIELDTYPE ftype)
+TXT_FORCE_INLINE void opAdd(D &mem, size_t addr, double o2, FIELDTYPE ftype)
 {
     double o1 = mem.getValue(addr, ftype);
     T res = static_cast<T>(o1) + static_cast<T>(o2);
@@ -1436,7 +1438,7 @@ SDL_FORCE_INLINE void opAdd(D &mem, size_t addr, double o2, FIELDTYPE ftype)
 }
 
 template<typename T, class D>
-SDL_FORCE_INLINE void opSub(D &mem, size_t addr, double o2, FIELDTYPE ftype)
+TXT_FORCE_INLINE void opSub(D &mem, size_t addr, double o2, FIELDTYPE ftype)
 {
     double o1 = mem.getValue(addr, ftype);
     T res = static_cast<T>(o1) - static_cast<T>(o2);
@@ -1444,7 +1446,7 @@ SDL_FORCE_INLINE void opSub(D &mem, size_t addr, double o2, FIELDTYPE ftype)
 }
 
 template<typename T, class D>
-SDL_FORCE_INLINE void opMul(D &mem, size_t addr, double o2, FIELDTYPE ftype)
+TXT_FORCE_INLINE void opMul(D &mem, size_t addr, double o2, FIELDTYPE ftype)
 {
     double o1 = mem.getValue(addr, ftype);
     T res = static_cast<T>(o1) * static_cast<T>(o2);
@@ -1452,7 +1454,7 @@ SDL_FORCE_INLINE void opMul(D &mem, size_t addr, double o2, FIELDTYPE ftype)
 }
 
 template<typename T, class D>
-SDL_FORCE_INLINE void opDiv(D &mem, size_t addr, double o2, FIELDTYPE ftype)
+TXT_FORCE_INLINE void opDiv(D &mem, size_t addr, double o2, FIELDTYPE ftype)
 {
     double o1 = mem.getValue(addr, ftype);
     T res = static_cast<T>(o1) / static_cast<T>(o2);
@@ -1460,7 +1462,7 @@ SDL_FORCE_INLINE void opDiv(D &mem, size_t addr, double o2, FIELDTYPE ftype)
 }
 
 template<typename T, class D>
-SDL_FORCE_INLINE void opXor(D &mem, size_t addr, double o2, FIELDTYPE ftype)
+TXT_FORCE_INLINE void opXor(D &mem, size_t addr, double o2, FIELDTYPE ftype)
 {
     double o1 = mem.getValue(addr, ftype);
     T res = static_cast<T>(o1) ^ static_cast<T>(o2);
@@ -1762,7 +1764,7 @@ double GetMem(size_t addr, FIELDTYPE ftype)
 
 
 template<typename T, class D, class U>
-SDL_FORCE_INLINE void opAdd(D &mem, U *obj, size_t addr, double o2, FIELDTYPE ftype)
+TXT_FORCE_INLINE void opAdd(D &mem, U *obj, size_t addr, double o2, FIELDTYPE ftype)
 {
     double o1 = mem.getValue(obj, addr, ftype);
     T res = static_cast<T>(o1) + static_cast<T>(o2);
@@ -1770,7 +1772,7 @@ SDL_FORCE_INLINE void opAdd(D &mem, U *obj, size_t addr, double o2, FIELDTYPE ft
 }
 
 template<typename T, class D, class U>
-SDL_FORCE_INLINE void opSub(D &mem, U *obj, size_t addr, double o2, FIELDTYPE ftype)
+TXT_FORCE_INLINE void opSub(D &mem, U *obj, size_t addr, double o2, FIELDTYPE ftype)
 {
     double o1 = mem.getValue(obj, addr, ftype);
     T res = static_cast<T>(o1) - static_cast<T>(o2);
@@ -1778,7 +1780,7 @@ SDL_FORCE_INLINE void opSub(D &mem, U *obj, size_t addr, double o2, FIELDTYPE ft
 }
 
 template<typename T, class D, class U>
-SDL_FORCE_INLINE void opMul(D &mem, U *obj, size_t addr, double o2, FIELDTYPE ftype)
+TXT_FORCE_INLINE void opMul(D &mem, U *obj, size_t addr, double o2, FIELDTYPE ftype)
 {
     double o1 = mem.getValue(obj, addr, ftype);
     T res = static_cast<T>(o1) * static_cast<T>(o2);
@@ -1786,7 +1788,7 @@ SDL_FORCE_INLINE void opMul(D &mem, U *obj, size_t addr, double o2, FIELDTYPE ft
 }
 
 template<typename T, class D, class U>
-SDL_FORCE_INLINE void opDiv(D &mem, U *obj, size_t addr, double o2, FIELDTYPE ftype)
+TXT_FORCE_INLINE void opDiv(D &mem, U *obj, size_t addr, double o2, FIELDTYPE ftype)
 {
     double o1 = mem.getValue(obj, addr, ftype);
     T res = static_cast<T>(o1) / static_cast<T>(o2);
@@ -1794,7 +1796,7 @@ SDL_FORCE_INLINE void opDiv(D &mem, U *obj, size_t addr, double o2, FIELDTYPE ft
 }
 
 template<typename T, class D, class U>
-SDL_FORCE_INLINE void opXor(D &mem, U *obj, size_t addr, double o2, FIELDTYPE ftype)
+TXT_FORCE_INLINE void opXor(D &mem, U *obj, size_t addr, double o2, FIELDTYPE ftype)
 {
     double o1 = mem.getValue(obj, addr, ftype);
     T res = static_cast<T>(o1) ^ static_cast<T>(o2);
