@@ -257,6 +257,11 @@ void UpdateGraphics2(bool skipRepaint)
 //    {
 //        XRender::renderTexture(0, 0, ScreenW, ScreenH, 0, 0, 0);
 //    }
+
+    #ifdef __3DS__
+            XRender::setTargetLayer(0);
+    #endif
+
     XRender::clearBuffer();
     DrawBackdrop();
 
@@ -488,6 +493,10 @@ void UpdateGraphics2(bool skipRepaint)
             }
         }
 
+#ifdef __3DS__
+        XRender::setTargetLayer(3);
+#endif
+
         DrawEditorWorld();
     }
     else
@@ -587,6 +596,10 @@ void UpdateGraphics2(bool skipRepaint)
              }
         }
 
+#ifdef __3DS__
+        XRender::setTargetLayer(2);
+#endif
+
 //        XRender::renderTexture(0, 0, 800, 130, GFX.Interface[4], 0, 0);
         if(GFX.WorldMapFrame_Tile.inited && (!GFX.Interface[4].inited || !GFX.isCustom(37) || GFX.isCustom(69)))
         {
@@ -630,6 +643,9 @@ void UpdateGraphics2(bool skipRepaint)
             XRender::renderTexture(sW-margin, sH-margin, margin, margin, GFX.Interface[4], GFX.Interface[4].w-66, GFX.Interface[4].h-66);
         }
 
+#ifdef __3DS__
+        XRender::setTargetLayer(3);
+#endif
 
         int pX, pY;
         pY = marginTop - 6;

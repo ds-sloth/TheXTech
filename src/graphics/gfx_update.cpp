@@ -1037,7 +1037,7 @@ void UpdateGraphics(bool skipRepaint)
 //        If LevelEditor = True Or MagicHand = True Then
 //            frmLevelWindow.vScreen(1).AutoRedraw = True
 //        Else
-//            frmMain.AutoRedraw = True
+//            XRender::AutoRedraw = True
 //        End If
 //    End If
 
@@ -1056,6 +1056,10 @@ void UpdateGraphics(bool skipRepaint)
         ClearBuffer = false;
         XRender::clearBuffer();
     }
+
+#ifdef __3DS__
+        XRender::setTargetLayer(0);
+#endif
 
     // even if not, black background is good, to be safe
     XRender::renderRect(0, 0, ScreenW, ScreenH, 0, 0, 0);
@@ -1134,6 +1138,10 @@ void UpdateGraphics(bool skipRepaint)
 
 //        End If
         }
+
+#ifdef __3DS__
+        XRender::setTargetLayer(1);
+#endif
 
         if(LevelEditor)
         {
@@ -1308,6 +1316,10 @@ void UpdateGraphics(bool skipRepaint)
                                       0, BackgroundHeight[Background[A].Type] * BackgroundFrame[Background[A].Type]);
             }
         }
+
+#ifdef __3DS__
+        XRender::setTargetLayer(2);
+#endif
 
 //        For A = 1 To numNPCs 'Display NPCs that should be behind blocks
         for(size_t i = 0; i < NPC_Draw_Queue_p.BG_n; i++)
@@ -2291,6 +2303,10 @@ void UpdateGraphics(bool skipRepaint)
             // And don't draw when many players at the same screen
             if(numPlayers == 1 || numScreens != 1)
                 g_levelVScreenFader[Z].draw(false);
+
+#ifdef __3DS__
+        XRender::setTargetLayer(3);
+#endif
 
     //    'Interface
     //            B = 0

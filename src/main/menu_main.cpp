@@ -1443,7 +1443,7 @@ bool mainMenuUpdate()
 #ifndef RENDER_FULLSCREEN_ALWAYS
             optionsMenuLength++;
 #endif
-#if !defined(__3DS__) && !defined(VITA)
+#if !defined(VITA)
             optionsMenuLength ++; // ScaleMode
 #endif
 #ifndef THEXTECH_FIXED_RES
@@ -1468,7 +1468,7 @@ bool mainMenuUpdate()
                                 menuLen = 18 * 15; // std::strlen("fullscreen mode")
                         }
 #endif
-#if !defined(__3DS__) && !defined(VITA)
+#if !defined(VITA)
                         else if(A == i++)
                             menuLen = 18 * (7 + ScaleMode_strings.at(g_videoSettings.scaleMode).length());
 #endif
@@ -1529,7 +1529,7 @@ bool mainMenuUpdate()
                         ChangeScreen();
                     }
 #endif
-#if !defined(__3DS__) && !defined(VITA)
+#if !defined(VITA)
                     else if(MenuCursor == i++)
                     {
                         PlaySoundMenu(SFX_Do);
@@ -2053,13 +2053,13 @@ void mainMenuDraw()
     {
         int i = 0;
         SuperPrint(g_mainMenu.controlsTitle, 3, MenuX, MenuY + 30*i++);
-#ifndef __ANDROID__
+#ifndef RENDER_FULLSCREEN_ALWAYS // on Android and some other platforms, run the always full-screen
         if(resChanged)
             SuperPrint("WINDOWED MODE", 3, MenuX, MenuY + 30*i++);
         else
             SuperPrint("FULLSCREEN MODE", 3, MenuX, MenuY + 30*i++);
 #endif
-#if !defined(__3DS__) && !defined(VITA)
+#if !defined(VITA)
         SuperPrint("SCALE: "+ScaleMode_strings.at(g_videoSettings.scaleMode), 3, MenuX, MenuY + 30*i++);
 #endif
 #ifndef THEXTECH_FIXED_RES
