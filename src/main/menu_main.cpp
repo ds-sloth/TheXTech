@@ -1446,7 +1446,7 @@ bool mainMenuUpdate()
 #if !defined(__3DS__) && !defined(VITA)
             optionsMenuLength ++; // ScaleMode
 #endif
-#ifndef FIXED_RES
+#ifndef THEXTECH_FIXED_RES
             optionsMenuLength ++; // resolution
 #endif
 
@@ -1472,7 +1472,7 @@ bool mainMenuUpdate()
                         else if(A == i++)
                             menuLen = 18 * (7 + ScaleMode_strings.at(g_videoSettings.scaleMode).length());
 #endif
-#if !defined(FIXED_RES)
+#if !defined(THEXTECH_FIXED_RES)
                         else if(A == i++)
                             menuLen = 18 * std::strlen("res: WWWxHHH (word)");
 #endif
@@ -1545,7 +1545,7 @@ bool mainMenuUpdate()
                         UpdateInternalRes();
                     }
 #endif
-#ifndef FIXED_RES
+#ifndef THEXTECH_FIXED_RES
                     else if(MenuCursor == i++)
                     {
                         PlaySoundMenu(SFX_Do);
@@ -2062,7 +2062,7 @@ void mainMenuDraw()
 #if !defined(__3DS__) && !defined(VITA)
         SuperPrint("SCALE: "+ScaleMode_strings.at(g_videoSettings.scaleMode), 3, MenuX, MenuY + 30*i++);
 #endif
-#ifndef FIXED_RES
+#ifndef THEXTECH_FIXED_RES
         std::string resString = fmt::format_ne("RES: {0}x{1}", g_config.InternalW, g_config.InternalH);
         if (g_config.InternalW == 480 && g_config.InternalH == 320)
             resString += " (GBA)";

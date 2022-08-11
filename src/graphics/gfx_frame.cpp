@@ -52,6 +52,9 @@ void DrawTextureTiled(int dst_x, int dst_y, int dst_w, int dst_h, StdPicture& tx
     if(src_h == -1)
         src_h = tx.h;
 
+    if(src_w == 0 || src_h == 0)
+    	return;
+
     int c_off_x = off_x % src_w;
     // want modulus, not remainder
     if(c_off_x < 0)
@@ -89,6 +92,9 @@ void DrawTextureTiled(int dst_x, int dst_y, int dst_w, int dst_h, StdPicture& tx
 void RenderFrame(const Location_t& external, const Location_t& internal,
 	StdPicture& tile, StdPicture* border, const FrameBorderInfo* borderinfo)
 {
+	if(tile.w == 0 || tile.h == 0)
+		return;
+
 	// first, verify to what extent the external and internal parts are the same
 	bool have_l = external.X != internal.X;
 	bool have_t = external.Y != internal.Y;
