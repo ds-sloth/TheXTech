@@ -363,6 +363,10 @@ void UpdateGraphics2(bool skipRepaint)
             sBottom = -vScreenY[1] + vScreen[1].Height - (margin - 2);
         }
 
+#ifdef __3DS__
+        margin += XRender::MAX_3D_OFFSET;
+#endif
+
         Location_t sView;
         sView.X = sLeft;
         sView.Y = sTop;

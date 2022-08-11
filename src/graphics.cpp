@@ -220,13 +220,21 @@ void GetvScreen(const int A)
             vScreenX[A] += -vScreen[A].tempX;
             vScreenY[A] += -vScreen[A].TempY;
 
+#ifdef __3DS__
+            constexpr int leftMargin = XRender::MAX_3D_OFFSET;
+            constexpr int rightMargin = XRender::MAX_3D_OFFSET;
+#else
+            constexpr int leftMargin = 0;
+            constexpr int rightMargin = 0;
+#endif
+
             // center the level if too small, otherwise shift so that it is onscreen
-            if(vScreen[A].Width + level[p.Section].X > level[p.Section].Width)
+            if(vScreen[A].Width + level[p.Section].X + leftMargin + rightMargin > level[p.Section].Width)
                 vScreenX[A] = -level[p.Section].X/2 + -(level[p.Section].Width - vScreen[A].Width)/2;
-            else if(-vScreenX[A] < level[p.Section].X)
-                vScreenX[A] = -level[p.Section].X;
-            else if(-vScreenX[A] + vScreen[A].Width > level[p.Section].Width)
-                vScreenX[A] = -(level[p.Section].Width - vScreen[A].Width);
+            else if(-vScreenX[A] + leftMargin < level[p.Section].X)
+                vScreenX[A] = -level[p.Section].X + leftMargin;
+            else if(-vScreenX[A] + vScreen[A].Width - rightMargin > level[p.Section].Width)
+                vScreenX[A] = -(level[p.Section].Width - vScreen[A].Width) - rightMargin;
 
             // center the level if too small, otherwise shift so that it is onscreen
             if(vScreen[A].Height + level[p.Section].Y > level[p.Section].Height)
@@ -236,9 +244,6 @@ void GetvScreen(const int A)
             else if(-vScreenY[A] + vScreen[A].Height > level[p.Section].Height)
                 vScreenY[A] = -(level[p.Section].Height - vScreen[A].Height);
         }
-
-        // there is some 3DS-specific code to ensure the screen boundaries work with the 3D effect, not ported yet.
-        // also to ensure the vScreen boundary occurs on an even pixel
 
         if(vScreen[A].TempDelay > 0)
             vScreen[A].TempDelay -= 1;
@@ -257,8 +262,17 @@ void GetvScreen(const int A)
 
     // keep vScreen boundary even on 3DS
 #ifdef __3DS__
-    vScreenX[A] -= std::fmod(vScreenX[A], 2.);
-    vScreenY[A] -= std::fmod(vScreenY[A], 2.);
+    vScreenX[A] += 1;
+    if(vScreenX[A] > 0)
+        vScreenX[A] -= std::fmod(vScreenX[A], 2.);
+    else
+        vScreenX[A] += std::fmod(vScreenX[A], 2.);
+
+    vScreenY[A] += 1;
+    if(vScreenY[A] > 0)
+        vScreenY[A] -= std::fmod(vScreenY[A], 2.);
+    else
+        vScreenY[A] += std::fmod(vScreenY[A], 2.);
 #endif
 }
 
@@ -329,15 +343,23 @@ void GetvScreenAverage()
     vScreenX[1] = (vScreenX[1] / B) + (vScreen[1].Width * 0.5);
     vScreenY[1] = (vScreenY[1] / B) + (vScreen[1].Height * 0.5) - vScreenYOffset;
 
+#ifdef __3DS__
+    constexpr int leftMargin = XRender::MAX_3D_OFFSET;
+    constexpr int rightMargin = XRender::MAX_3D_OFFSET;
+#else
+    constexpr int leftMargin = 0;
+    constexpr int rightMargin = 0;
+#endif
+
     // case one: level is too small, center it.
-    if(vScreen[A].Width + level[Player[1].Section].X > level[Player[1].Section].Width)
+    if(vScreen[A].Width + level[Player[1].Section].X + leftMargin + rightMargin > level[Player[1].Section].Width)
         vScreenX[A] = -level[Player[1].Section].X/2 + -(level[Player[1].Section].Width - vScreen[A].Width)/2;
     // case two: we are too close to the left
-    else if(-vScreenX[A] < level[Player[1].Section].X)
-        vScreenX[A] = -level[Player[1].Section].X;
+    else if(-vScreenX[A] + leftMargin < level[Player[1].Section].X)
+        vScreenX[A] = -level[Player[1].Section].X + leftMargin;
     // case three: we are too close to the right
-    else if(-vScreenX[A] + vScreen[A].Width > level[Player[1].Section].Width)
-        vScreenX[A] = -(level[Player[1].Section].Width - vScreen[A].Width);
+    else if(-vScreenX[A] + vScreen[A].Width - rightMargin > level[Player[1].Section].Width)
+        vScreenX[A] = -(level[Player[1].Section].Width - vScreen[A].Width) - rightMargin;
 
     // case one: level is too small, center it.
     if(vScreen[A].Height + level[Player[1].Section].Y > level[Player[1].Section].Height)
@@ -367,8 +389,17 @@ void GetvScreenAverage()
 
     // keep vScreen boundary even on 3DS
 #ifdef __3DS__
-    vScreenX[A] -= std::fmod(vScreenX[A], 2.);
-    vScreenY[A] -= std::fmod(vScreenY[A], 2.);
+    vScreenX[A] += 1;
+    if(vScreenX[A] > 0)
+        vScreenX[A] -= std::fmod(vScreenX[A], 2.);
+    else
+        vScreenX[A] += std::fmod(vScreenX[A], 2.);
+
+    vScreenY[A] += 1;
+    if(vScreenY[A] > 0)
+        vScreenY[A] -= std::fmod(vScreenY[A], 2.);
+    else
+        vScreenY[A] += std::fmod(vScreenY[A], 2.);
 #endif
 }
 
@@ -446,9 +477,19 @@ void GetvScreenAverage2()
     vScreenX[1] = (vScreenX[1] / B) + (ScreenW * 0.5);
     vScreenY[1] = (vScreenY[1] / B) + (ScreenH * 0.5) - vScreenYOffset;
 
+    // keep vScreen boundary even on 3DS
 #ifdef __3DS__
-    vScreenX[1] -= std::fmod(vScreenX[1], 2.);
-    vScreenY[1] -= std::fmod(vScreenY[1], 2.);
+    vScreenX[1] += 1;
+    if(vScreenX[1] > 0)
+        vScreenX[1] -= std::fmod(vScreenX[1], 2.);
+    else
+        vScreenX[1] += std::fmod(vScreenX[1], 2.);
+
+    vScreenY[1] += 1;
+    if(vScreenY[1] > 0)
+        vScreenY[1] -= std::fmod(vScreenY[1], 2.);
+    else
+        vScreenY[1] += std::fmod(vScreenY[1], 2.);
 #endif
 }
 

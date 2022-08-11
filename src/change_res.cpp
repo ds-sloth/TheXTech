@@ -215,6 +215,11 @@ void UpdateInternalRes()
         ScreenW = req_w;
         ScreenH = req_h;
     }
+
+#ifdef __3DS__
+    ScreenW += XRender::MAX_3D_OFFSET * 2;
+#endif
+
 #endif // #ifndef THEXTECH_FIXED_RES
 
     XRender::updateViewport();

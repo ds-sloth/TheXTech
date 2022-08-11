@@ -27,7 +27,7 @@
 #include "../core/window.h"
 #include "../compat.h"
 #include "config.h"
-
+#include "core/render.h"
 
 void SetScreenType()
 {
@@ -485,6 +485,26 @@ void CenterScreens()
             vScreen[2].ScreenLeft += (vScreen[2].Width - MaxWidth2) / 2;
         vScreen[2].Width = MaxWidth2;
     }
+
+    // add back the 3D effect margins if applicable
+#ifdef __3DS__
+    if(!LevelSelect && !g_compatibility.free_level_res)
+    {
+        for(int i = 1; i <= 2; i++)
+        {
+            if(vScreen[i].ScreenLeft == XRender::MAX_3D_OFFSET)
+            {
+                vScreen[i].Width += XRender::MAX_3D_OFFSET;
+                vScreen[i].ScreenLeft = 0;
+            }
+
+            if(vScreen[i].ScreenLeft + vScreen[i].Width + XRender::MAX_3D_OFFSET == ScreenW)
+            {
+                vScreen[i].Width += XRender::MAX_3D_OFFSET;
+            }
+        }
+    }
+#endif
 
     if(MaxHeight1 < vScreen[1].Height)
     {
