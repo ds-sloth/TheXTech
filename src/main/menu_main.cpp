@@ -1756,7 +1756,7 @@ void mainMenuDraw()
     // Render the permanent menu graphics (curtain, URL, logo)
 
 #ifdef __3DS__
-    XRender::setTargetLayer(1);
+    XRender::setTargetLayer(2);
 #endif
 
     // Curtain
@@ -1777,21 +1777,21 @@ void mainMenuDraw()
 
     // can animate curtain falling by replacing y coordinate with -GFX.MenuGFX[1].h * g_levelScreenFader.m_scale
 
-#ifdef __3DS__
-    XRender::setTargetLayer(2);
-#endif
-
     // URL
     if(ScreenH >= SmallScreenH)
         XRender::renderTexture(ScreenW / 2 - GFX.MenuGFX[3].w / 2, ScreenH - 24,
                 GFX.MenuGFX[3].w, GFX.MenuGFX[3].h, GFX.MenuGFX[3], 0, 0);
+
+#ifdef __3DS__
+    XRender::setTargetLayer(3);
+#endif
 
     // game logo
     int LogoMode = 0;
     if(ScreenH < SmallScreenH &&
         (MenuMode == MENU_INPUT_SETTINGS))
     {
-        LogoMode = 2;
+        LogoMode = 0;
     }
     else if(ScreenH >= TinyScreenH || MenuMode == MENU_INTRO)
     {
@@ -1816,11 +1816,6 @@ void mainMenuDraw()
     {
         SuperPrint(g_gameInfo.title, 3, ScreenW/2 - g_gameInfo.title.length()*9, 30);
     }
-
-#ifdef __3DS__
-    XRender::setTargetLayer(3);
-#endif
-
 
 #ifndef PGE_NO_THREADING
     if(SDL_AtomicGet(&loading))
