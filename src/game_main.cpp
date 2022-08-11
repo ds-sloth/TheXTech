@@ -366,12 +366,12 @@ int GameMain(const CmdLineSetup_t &setup)
     {
         if(GameMenu || MagicHand || LevelEditor)
         {
-            XWindow::setCursor(AbstractWindow_t::CURSOR_NONE);
+            XWindow::setCursor(XWindow::CURSOR_NONE);
             XWindow::showCursor(0);
         }
         else if(!resChanged)
         {
-            XWindow::setCursor(AbstractWindow_t::CURSOR_DEFAULT);
+            XWindow::setCursor(XWindow::CURSOR_DEFAULT);
             XWindow::showCursor(1);
         }
 

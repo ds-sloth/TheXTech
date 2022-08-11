@@ -40,6 +40,22 @@ namespace XWindow
 {
 
 /*!
+ * \brief Cursor type
+ */
+enum Cursor_t
+{
+    CURSOR_DEFAULT = 0,
+    CURSOR_NONE
+};
+
+#ifdef WINDOW_CUSTOM
+
+extern bool init();
+extern void quit();
+
+#endif
+
+/*!
  * \brief Show the window
  */
 E_INLINE void show() TAIL
@@ -78,7 +94,7 @@ E_INLINE int showCursor(int show) TAIL
  * \brief Change the displayable cursor type
  * \param cursor cursor type
  */
-E_INLINE void setCursor(AbstractWindow_t::Cursor_t cursor) TAIL
+E_INLINE void setCursor(Cursor_t cursor) TAIL
 #ifndef WINDOW_CUSTOM
 {
     g_window->setCursor(cursor);
@@ -89,7 +105,7 @@ E_INLINE void setCursor(AbstractWindow_t::Cursor_t cursor) TAIL
  * \brief Get the current cursor type
  * \return Cursor type
  */
-E_INLINE AbstractWindow_t::Cursor_t getCursor() TAIL
+E_INLINE Cursor_t getCursor() TAIL
 #ifndef WINDOW_CUSTOM
 {
     return g_window->getCursor();

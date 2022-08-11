@@ -481,6 +481,19 @@ if(NOT 3DS)
     )
 endif()
 
+if(3DS)
+    list(APPEND THEXTECH_SRC
+        src/3ds/3ds-audio-lib.cpp
+        src/3ds/mixer_platform.cpp
+#        src/control/3ds.cpp
+        src/core/3ds/std_3ds.cpp
+        src/core/3ds/render_3ds.cpp
+        src/core/3ds/window_3ds.cpp
+        src/core/3ds/msgbox_3ds.cpp
+        src/core/3ds/events_3ds.cpp
+    )
+endif()
+
 # Add heads into the list
 file(GLOB THEXTECH_HEADS_SRC
     lib/*.h
@@ -637,7 +650,7 @@ if(VITA)
 endif()
 
 if(3DS)
-    target_compile_definitions(thextech PRIVATE -DPGE_NO_THREADING -DNO_SCREENSHOT -DLOW_MEM -DFIXED_RES -DPRELOAD_LEVELS -DRANGE_ARR_UNSAFE_MODE -D__3DS__ -DNO_FILE_LOGGING)
+    target_compile_definitions(thextech PRIVATE -DPGE_NO_THREADING -DNO_SCREENSHOT -DLOW_MEM -DFIXED_RES -DPRELOAD_LEVELS -DRANGE_ARR_UNSAFE_MODE -D__3DS__ -DWINDOW_CUSTOM -DMSGBOX_CUSTOM -DEVENTS_CUSTOM -DRENDER_CUSTOM -DNO_SDL)
 endif()
 
 if(THEXTECH_FIXED_ASSETS_PATH AND NOT THEXTECH_FIXED_ASSETS_PATH STREQUAL "")

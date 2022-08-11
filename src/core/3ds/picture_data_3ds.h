@@ -19,68 +19,32 @@
  */
 
 #pragma once
-#ifndef EVENTS_HHHHHHH
-#define EVENTS_HHHHHHH
+#ifndef PICTURE_DATA_SDL_H
+#define PICTURE_DATA_SDL_H
 
-#ifndef EVENTS_CUSTOM
-#   include "core/std.h"
-#   include "base/events_base.h"
-#   define E_INLINE TXT_FORCE_INLINE
-#   define TAIL
-#else
-#   define E_INLINE    extern
-#   define TAIL ;
-#endif
-
+#include <cstdint>
+#include <citro2d.h>
 
 /*!
- *  Events interface
+ * \brief Platform specific picture data. Fields should not be used directly
  */
-namespace XEvents
+struct StdPictureData
 {
 
-#ifdef EVENTS_CUSTOM
+    uint32_t last_draw_frame = 0;
 
-extern bool init();
-extern void quit();
+    C2D_SpriteSheet texture = nullptr;
+    C2D_Image image;
+    C2D_SpriteSheet texture2 = nullptr;
+    C2D_Image image2;
+    C2D_SpriteSheet texture3 = nullptr;
+    C2D_Image image3;
 
-#endif
+    inline bool hasTexture()
+    {
+        return texture != nullptr;
+    }
 
-/*!
- * \brief Process events
- */
-E_INLINE void doEvents() TAIL
+};
 
-#ifndef EVENTS_CUSTOM
-{
-    g_events->doEvents();
-}
-#endif
-
-/*!
- * \brief Wait until any events will happen
- */
-E_INLINE void waitEvents() TAIL
-
-#ifndef EVENTS_CUSTOM
-{
-    g_events->waitEvents();
-}
-#endif
-
-E_INLINE void eventResize() TAIL
-
-#ifndef EVENTS_CUSTOM
-{
-    g_events->eventResize();
-}
-#endif
-
-} // XEvents
-
-#ifndef EVENTS_CUSTOM
-#   undef E_INLINE
-#   undef TAIL
-#endif
-
-#endif // EVENTS_HHHHHHH
+#endif // PICTURE_DATA_SDL_H

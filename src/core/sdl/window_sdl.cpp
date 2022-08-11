@@ -225,7 +225,7 @@ void WindowSDL::setCursor(Cursor_t cursor)
     // Do nothing, just remember the last cursor type was set
 }
 
-AbstractWindow_t::Cursor_t WindowSDL::getCursor()
+XWindow::CURSOR_t WindowSDL::getCursor()
 {
     return m_cursor;
 }

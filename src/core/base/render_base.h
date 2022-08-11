@@ -24,6 +24,7 @@
 
 #include <string>
 
+#include "core/render.h"
 #include "std_picture.h"
 
 #ifndef __EMSCRIPTEN__
@@ -44,19 +45,6 @@ struct GifRecorder;
 typedef struct SDL_Thread SDL_Thread;
 typedef struct SDL_mutex SDL_mutex;
 
-
-enum RendererFlip_t
-{
-    X_FLIP_NONE       = 0x00000000,    /**< Do not flip */
-    X_FLIP_HORIZONTAL = 0x00000001,    /**< flip horizontally */
-    X_FLIP_VERTICAL   = 0x00000002     /**< flip vertically */
-};
-
-struct FPoint_t
-{
-    float x;
-    float y;
-};
 
 
 class AbstractRender_t

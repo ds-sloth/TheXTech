@@ -33,7 +33,7 @@ class WindowSDL final : public AbstractWindow_t
 {
     std::string m_windowTitle;
     SDL_Window *m_window = nullptr;
-    Cursor_t m_cursor = CURSOR_DEFAULT;
+    XWindow::Cursor_t m_cursor = CURSOR_DEFAULT;
 
 public:
     WindowSDL();
@@ -71,13 +71,13 @@ public:
      * \brief Change the displayable cursor type
      * \param cursor cursor type
      */
-    void setCursor(Cursor_t cursor) override;
+    void setCursor(XWindow::Cursor_t cursor) override;
 
     /*!
      * \brief Get the current cursor type
      * \return Cursor type
      */
-    Cursor_t getCursor() override;
+    XWindow::Cursor_t getCursor() override;
 
     /*!
      * \brief Place cursor at desired window position

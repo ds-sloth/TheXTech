@@ -24,7 +24,10 @@
 
 // TODO: Implement here branching between platform specific StdPictureData variants
 
-#include "sdl/picture_data_sdl.h"
-
+#ifdef __3DS__
+#   include "3ds/picture_data_3ds.h"
+#else
+#   include "sdl/picture_data_sdl.h"
+#endif
 
 #endif // PICTURE_DATA_H

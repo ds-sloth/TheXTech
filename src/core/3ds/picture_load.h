@@ -19,68 +19,26 @@
  */
 
 #pragma once
-#ifndef EVENTS_HHHHHHH
-#define EVENTS_HHHHHHH
 
-#ifndef EVENTS_CUSTOM
-#   include "core/std.h"
-#   include "base/events_base.h"
-#   define E_INLINE TXT_FORCE_INLINE
-#   define TAIL
-#else
-#   define E_INLINE    extern
-#   define TAIL ;
-#endif
+#ifndef STD_PICTURE_LOAD_H
+#define STD_PICTURE_LOAD_H
 
+#include <string>
 
 /*!
- *  Events interface
+ * \brief Generic image loading store.
+ *
+ * If needed somehing unusual, please define alternative structure instead of this
  */
-namespace XEvents
+struct StdPictureLoad
 {
+    //! Is this a lazy-loaded texture?
+    bool lazyLoaded = false;
 
-#ifdef EVENTS_CUSTOM
+    //! Path to find image
+    std::string path = "";
 
-extern bool init();
-extern void quit();
+    inline void clear() {}
+};
 
-#endif
-
-/*!
- * \brief Process events
- */
-E_INLINE void doEvents() TAIL
-
-#ifndef EVENTS_CUSTOM
-{
-    g_events->doEvents();
-}
-#endif
-
-/*!
- * \brief Wait until any events will happen
- */
-E_INLINE void waitEvents() TAIL
-
-#ifndef EVENTS_CUSTOM
-{
-    g_events->waitEvents();
-}
-#endif
-
-E_INLINE void eventResize() TAIL
-
-#ifndef EVENTS_CUSTOM
-{
-    g_events->eventResize();
-}
-#endif
-
-} // XEvents
-
-#ifndef EVENTS_CUSTOM
-#   undef E_INLINE
-#   undef TAIL
-#endif
-
-#endif // EVENTS_HHHHHHH
+#endif // #ifndef STD_PICTURE_LOAD_H
