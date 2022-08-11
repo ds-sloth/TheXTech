@@ -25,3 +25,4 @@
 [submodule "3rdparty/harfbuzz"]
 	path = 3rdparty/harfbuzz
 	url = https://github.com/Wohlstand/harfbuzz.git
+	branch = main
